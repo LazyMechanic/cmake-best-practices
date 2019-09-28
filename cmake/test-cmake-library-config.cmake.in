@@ -1,0 +1,2 @@
+# Add the targets file
+include("${CMAKE_CURRENT_BINARY_DIR}/@test-cmake-library-targets_FILE@")

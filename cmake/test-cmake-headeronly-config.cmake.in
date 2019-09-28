@@ -1,0 +1,2 @@
+# Add the targets file
+include("${CMAKE_CURRENT_BINARY_DIR}/@test-cmake-headeronly-targets_FILE@")
