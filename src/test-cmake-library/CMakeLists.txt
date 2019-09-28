@@ -103,7 +103,7 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion)
 
 configure_package_config_file(
-    "${test-cmake_ROOT_DIR}/cmake/${SUBPROJ_NAME}-config.cmake.in"
+    "${PROJECT_ROOT_DIR}/cmake/${SUBPROJ_NAME}-config.cmake.in"
     "${PROJECT_BINARY_DIR}/${SUBPROJ_NAME}-config.cmake"
     INSTALL_DESTINATION ${${SUBPROJ_NAME}_INSTALL_CMAKE_PREFIX})
 
