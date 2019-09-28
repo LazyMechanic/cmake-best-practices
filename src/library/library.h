@@ -1,6 +1,6 @@
 #pragma once
 
-class test_cmake_library {
+class cmake_best_practice_library {
 public:
     void print();
 };
