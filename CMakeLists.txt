@@ -6,7 +6,7 @@ set(_PROJECT_PATCH_VERSION 0)
 set(_PROJECT_VERSION
   ${_PROJECT_MAJOR_VERSION}.${_PROJECT_MINOR_VERSION}.${_PROJECT_PATCH_VERSION})
 
-project(cmake-best-practice LANGUAGES CXX VERSION "${_PROJECT_VERSION}")
+project(cmake-best-practices LANGUAGES CXX VERSION "${_PROJECT_VERSION}")
 
 # ############################################################### #
 # library options ############################################### #

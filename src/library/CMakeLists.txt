@@ -1,5 +1,5 @@
 set(SUBPROJ_NAME "library")
-set(SUBPROJ_NAMESPACE "cmake-best-practice")
+set(SUBPROJ_NAMESPACE "cmake-best-practices")
 
 set(${SUBPROJ_NAME}_MAJOR_VERSION 0)
 set(${SUBPROJ_NAME}_MINOR_VERSION 1)
