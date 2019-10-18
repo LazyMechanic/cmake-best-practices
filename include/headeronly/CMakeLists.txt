@@ -7,36 +7,35 @@ set(${SUBPROJ_NAME}_PATCH_VERSION 0)
 set(${SUBPROJ_NAME}_VERSION
     ${${SUBPROJ_NAME}_MAJOR_VERSION}.${${SUBPROJ_NAME}_MINOR_VERSION}.${${SUBPROJ_NAME}_PATCH_VERSION})
 
-file(
-    GLOB ${SUBPROJ_NAME}_HEADERS
-    "*.h"
-    "*.hxx"
-    "*.hpp")
+set(
+    ${SUBPROJ_NAME}_HEADERS
+    "headeronly.h")
+
+# No source file in header-only library 
+#set(
+#    ${SUBPROJ_NAME}_SOURCES
+#    "")
+#
 
 set(
-    ${SUBPROJ_NAME}_SRC
+    ${SUBPROJ_NAME}_ALL_SRCS
     ${${SUBPROJ_NAME}_HEADERS})
 
 add_library(
     ${SUBPROJ_NAME}
     INTERFACE)
 
-target_compile_features(
-    ${SUBPROJ_NAME}
-    INTERFACE cxx_std_17)
+# Enable C++17 on this project
+set_target_properties(
+    ${SUBPROJ_NAME} PROPERTIES 
+    INTERFACE_CXX_STANDARD 17
+    INTERFACE_CXX_EXTENSIONS OFF
+    INTERFACE_CXX_STANDARD_REQUIRED YES)
 
 target_include_directories(
     ${SUBPROJ_NAME}
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
               $<INSTALL_INTERFACE:include>)
-
-# Find yaml-cpp
-find_package(yaml-cpp CONFIG REQUIRED)
-
-# Set yaml-cpp as dependency
-target_link_libraries(
-    ${SUBPROJ_NAME}
-    INTERFACE yaml-cpp)
     
 # ############################################################### #
 # Installing #################################################### #
@@ -52,12 +51,12 @@ install(
     FILES       ${${SUBPROJ_NAME}_HEADERS}
     DESTINATION ${${SUBPROJ_NAME}_INSTALL_INCLUDE_PREFIX})
 
-set(${SUBPROJ_NAME}-targets_FILE "${SUBPROJ_NAME}-targets.cmake")
+set(SUBPROJ_TARGETS_FILE "${SUBPROJ_NAME}-targets.cmake")
 
 # Create config-targets cmake file
 install(
     EXPORT      ${SUBPROJ_NAME}-targets
-    FILE        ${${SUBPROJ_NAME}-targets_FILE}
+    FILE        ${SUBPROJ_TARGETS_FILE}
     NAMESPACE   ${SUBPROJ_NAMESPACE}::
     DESTINATION ${${SUBPROJ_NAME}_INSTALL_CMAKE_PREFIX})
 

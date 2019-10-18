@@ -16,19 +16,13 @@ endif()
 
 string(TOLOWER ${${SUBPROJ_NAME}_TARGET_TYPE} ${SUBPROJ_NAME}_TARGET_TYPE_LOWER)
 
-file(
-    GLOB ${SUBPROJ_NAME}_HEADERS
-    "*.h"
-    "*.hxx"
-    "*.hpp"
-    "*.inl")
+set(
+    ${SUBPROJ_NAME}_HEADERS
+    "library.h")
 
-file(
-    GLOB ${SUBPROJ_NAME}_SOURCES
-    "*.c"
-    "*.cc"
-    "*.cxx"
-    "*.cpp")
+set(
+    ${SUBPROJ_NAME}_SOURCES
+    "library.cpp")
 
 set(
     ${SUBPROJ_NAME}_ALL_SRCS
@@ -40,9 +34,12 @@ add_library(
     ${${SUBPROJ_NAME}_TARGET_TYPE} 
     ${${SUBPROJ_NAME}_ALL_SRCS})
 
-target_compile_features(
-    ${SUBPROJ_NAME}
-    INTERFACE cxx_std_17)
+# Enable C++17 on this project
+set_target_properties(
+    ${SUBPROJ_NAME} PROPERTIES 
+    CXX_STANDARD 17
+    CXX_EXTENSIONS OFF
+    CXX_STANDARD_REQUIRED YES)
 
 set_target_properties(
     ${SUBPROJ_NAME} PROPERTIES
@@ -54,16 +51,8 @@ set_target_properties(
 target_include_directories(
     ${SUBPROJ_NAME}
     PRIVATE   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    INTERFACE $<BUILD_INTERFACE:${PROJECT_ROOT_DIR}/include>
               $<INSTALL_INTERFACE:include>)
-
-# Find yaml-cpp
-find_package(yaml-cpp CONFIG REQUIRED)
-
-# Set yaml-cpp as dependency
-target_link_libraries(
-    ${SUBPROJ_NAME} 
-    yaml-cpp)
     
 # ############################################################### #
 # Installing #################################################### #
@@ -86,12 +75,12 @@ install(
     ARCHIVE DESTINATION  ${${SUBPROJ_NAME}_INSTALL_LIB_PREFIX}
     LIBRARY DESTINATION  ${${SUBPROJ_NAME}_INSTALL_LIB_PREFIX})
 
-set(${SUBPROJ_NAME}-targets_FILE "${SUBPROJ_NAME}-${${SUBPROJ_NAME}_TARGET_TYPE_LOWER}-targets.cmake")
+set(SUBPROJ_TARGETS_FILE "${SUBPROJ_NAME}-${${SUBPROJ_NAME}_TARGET_TYPE_LOWER}-targets.cmake")
 
 # Create config-targets cmake file
 install(
     EXPORT      ${SUBPROJ_NAME}-targets
-    FILE        ${${SUBPROJ_NAME}-targets_FILE}
+    FILE        ${SUBPROJ_TARGETS_FILE}
     NAMESPACE   ${SUBPROJ_NAMESPACE}::
     DESTINATION ${${SUBPROJ_NAME}_INSTALL_CMAKE_PREFIX})
 
