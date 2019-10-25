@@ -1,14 +1,33 @@
-set(SUBPROJ_NAME "library")
-set(SUBPROJ_NAMESPACE "cmake-best-practices")
+set(SUBPROJ_NAME                         "library")
+set(${SUBPROJ_NAME}_NAMESPACE            "cmake-best-practices")
 
-set(${SUBPROJ_NAME}_MAJOR_VERSION 0)
-set(${SUBPROJ_NAME}_MINOR_VERSION 1)
-set(${SUBPROJ_NAME}_PATCH_VERSION 0)
+set(${SUBPROJ_NAME}_CXX_STANDARD          17)
+set(${SUBPROJ_NAME}_CXX_EXTENSIONS        OFF)
+set(${SUBPROJ_NAME}_CXX_STANDARD_REQUIRED YES)
+
+set(${SUBPROJ_NAME}_MAJOR_VERSION         0)
+set(${SUBPROJ_NAME}_MINOR_VERSION         1)
+set(${SUBPROJ_NAME}_PATCH_VERSION         0)
+
+# ############################################################### #
+# Options ####################################################### #
+# ############################################################### #
+
+include(OptionHelpers)
+generate_basic_options_library(${SUBPROJ_NAME})
+
+# Insert here your specififc options for build:
+# .............................................
+
+# ############################################################### #
+# Library version ############################################### #
+# ############################################################### #
+
 set(${SUBPROJ_NAME}_VERSION
     ${${SUBPROJ_NAME}_MAJOR_VERSION}.${${SUBPROJ_NAME}_MINOR_VERSION}.${${SUBPROJ_NAME}_PATCH_VERSION})
 
 # Set build type to library target
-if(${SUBPROJ_NAME}_BUILD_SHARED AND ${${SUBPROJ_NAME}_BUILD_SHARED} STREQUAL "ON")
+if(${SUBPROJ_NAME}_BUILD_SHARED)
     set(${SUBPROJ_NAME}_TARGET_TYPE "SHARED")
 else()
     set(${SUBPROJ_NAME}_TARGET_TYPE "STATIC")
@@ -16,30 +35,47 @@ endif()
 
 string(TOLOWER ${${SUBPROJ_NAME}_TARGET_TYPE} ${SUBPROJ_NAME}_TARGET_TYPE_LOWER)
 
+
+# ############################################################### #
+# Set all target sources ######################################## #
+# ############################################################### #
+
+# Include file with all source and header files
+include(${SUBPROJ_NAME}Files)
+
 set(
     ${SUBPROJ_NAME}_HEADERS
-    "library.h")
+    ${HEADERS})
 
 set(
     ${SUBPROJ_NAME}_SOURCES
-    "library.cpp")
+    ${SOURCES})
+
+# Unset temp variables
+unset(HEADERS)
+unset(SOURCES)
 
 set(
     ${SUBPROJ_NAME}_ALL_SRCS
     ${${SUBPROJ_NAME}_HEADERS}
     ${${SUBPROJ_NAME}_SOURCES})
 
+# ############################################################### #
+# Create target for build ####################################### #
+# ############################################################### #
+
+# Library target
 add_library(
     ${SUBPROJ_NAME} 
     ${${SUBPROJ_NAME}_TARGET_TYPE} 
     ${${SUBPROJ_NAME}_ALL_SRCS})
 
-# Enable C++17 on this project
+# Enable C++ standard
 set_target_properties(
     ${SUBPROJ_NAME} PROPERTIES 
-    CXX_STANDARD 17
-    CXX_EXTENSIONS OFF
-    CXX_STANDARD_REQUIRED YES)
+    CXX_STANDARD          ${${SUBPROJ_NAME}_CXX_STANDARD}
+    CXX_EXTENSIONS        ${${SUBPROJ_NAME}_CXX_EXTENSIONS}
+    CXX_STANDARD_REQUIRED ${${SUBPROJ_NAME}_CXX_STANDARD_REQUIRED})
 
 set_target_properties(
     ${SUBPROJ_NAME} PROPERTIES
@@ -51,7 +87,7 @@ set_target_properties(
 target_include_directories(
     ${SUBPROJ_NAME}
     PRIVATE   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    INTERFACE $<BUILD_INTERFACE:${PROJECT_ROOT_DIR}/include>
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
               $<INSTALL_INTERFACE:include>)
     
 # ############################################################### #
@@ -81,7 +117,7 @@ set(SUBPROJ_TARGETS_FILE "${SUBPROJ_NAME}-${${SUBPROJ_NAME}_TARGET_TYPE_LOWER}-t
 install(
     EXPORT      ${SUBPROJ_NAME}-targets
     FILE        ${SUBPROJ_TARGETS_FILE}
-    NAMESPACE   ${SUBPROJ_NAMESPACE}::
+    NAMESPACE   ${${SUBPROJ_NAME}_NAMESPACE}::
     DESTINATION ${${SUBPROJ_NAME}_INSTALL_CMAKE_PREFIX})
 
 # Create config files

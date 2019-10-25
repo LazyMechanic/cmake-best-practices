@@ -1,36 +1,64 @@
-set(SUBPROJ_NAME "headeronly")
-set(SUBPROJ_NAMESPACE "cmake-best-practices")
+set(SUBPROJ_NAME                          "headeronly")
+set(${SUBPROJ_NAME}_NAMESPACE             "cmake-best-practices")
 
-set(${SUBPROJ_NAME}_MAJOR_VERSION 0)
-set(${SUBPROJ_NAME}_MINOR_VERSION 1)
-set(${SUBPROJ_NAME}_PATCH_VERSION 0)
+set(${SUBPROJ_NAME}_CXX_STANDARD          17)
+set(${SUBPROJ_NAME}_CXX_EXTENSIONS        OFF)
+set(${SUBPROJ_NAME}_CXX_STANDARD_REQUIRED YES)
+
+set(${SUBPROJ_NAME}_MAJOR_VERSION         0)
+set(${SUBPROJ_NAME}_MINOR_VERSION         1)
+set(${SUBPROJ_NAME}_PATCH_VERSION         0)
+
+# ############################################################### #
+# Options ####################################################### #
+# ############################################################### #
+
+include(OptionHelpers)
+generate_basic_options_headeronly(${SUBPROJ_NAME})
+
+# Insert here your specififc options for build:
+# .............................................
+
+# ############################################################### #
+# Library version ############################################### #
+# ############################################################### #
+
 set(${SUBPROJ_NAME}_VERSION
     ${${SUBPROJ_NAME}_MAJOR_VERSION}.${${SUBPROJ_NAME}_MINOR_VERSION}.${${SUBPROJ_NAME}_PATCH_VERSION})
 
+# ############################################################### #
+# Set all target sources ######################################## #
+# ############################################################### #
+
+# Include file with all source and header files
+include(${SUBPROJ_NAME}Files)
+
 set(
     ${SUBPROJ_NAME}_HEADERS
-    "headeronly.h")
+    ${HEADERS})
 
-# No source file in header-only library 
-#set(
-#    ${SUBPROJ_NAME}_SOURCES
-#    "")
-#
+# Unset temp variable
+unset(HEADERS)
 
 set(
     ${SUBPROJ_NAME}_ALL_SRCS
     ${${SUBPROJ_NAME}_HEADERS})
 
+# ############################################################### #
+# Create target for build ####################################### #
+# ############################################################### #
+
+# Interface library target
 add_library(
     ${SUBPROJ_NAME}
     INTERFACE)
 
-# Enable C++17 on this project
+# Enable C++ standard on this project
 set_target_properties(
     ${SUBPROJ_NAME} PROPERTIES 
-    INTERFACE_CXX_STANDARD 17
-    INTERFACE_CXX_EXTENSIONS OFF
-    INTERFACE_CXX_STANDARD_REQUIRED YES)
+    INTERFACE_CXX_STANDARD          ${${SUBPROJ_NAME}_CXX_STANDARD}
+    INTERFACE_CXX_EXTENSIONS        ${${SUBPROJ_NAME}_CXX_EXTENSIONS}
+    INTERFACE_CXX_STANDARD_REQUIRED ${${SUBPROJ_NAME}_CXX_STANDARD_REQUIRED})
 
 target_include_directories(
     ${SUBPROJ_NAME}
@@ -57,7 +85,7 @@ set(SUBPROJ_TARGETS_FILE "${SUBPROJ_NAME}-targets.cmake")
 install(
     EXPORT      ${SUBPROJ_NAME}-targets
     FILE        ${SUBPROJ_TARGETS_FILE}
-    NAMESPACE   ${SUBPROJ_NAMESPACE}::
+    NAMESPACE   ${${SUBPROJ_NAME}_NAMESPACE}::
     DESTINATION ${${SUBPROJ_NAME}_INSTALL_CMAKE_PREFIX})
 
 # Create config files

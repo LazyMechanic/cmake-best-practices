@@ -1,26 +1,57 @@
-set(SUBPROJ_NAME "executable")
+set(SUBPROJ_NAME                         "executable")
+
+set(${SUBPROJ_NAME}_CXX_STANDARD          17)
+set(${SUBPROJ_NAME}_CXX_EXTENSIONS        OFF)
+set(${SUBPROJ_NAME}_CXX_STANDARD_REQUIRED YES)
+
+# ############################################################### #
+# Options ####################################################### #
+# ############################################################### #
+
+include(OptionHelpers)
+generate_basic_options_executable(${SUBPROJ_NAME})
+
+# Insert here your specififc options for build:
+# .............................................
+
+# ############################################################### #
+# Set all target sources ######################################## #
+# ############################################################### #
+
+# Include file with all source and header files
+include(${SUBPROJ_NAME}Files)
 
 set(
     ${SUBPROJ_NAME}_HEADERS
-    "")
+    ${HEADERS})
 
 set(
     ${SUBPROJ_NAME}_SOURCES
-    "main.cpp")
+    ${SOURCES})
+
+# Unset temp variable
+unset(HEADERS)
+unset(SOURCES)
 
 set(
     ${SUBPROJ_NAME}_ALL_SRCS
     ${${SUBPROJ_NAME}_HEADERS}
     ${${SUBPROJ_NAME}_SOURCES})
 
-add_executable(${SUBPROJ_NAME} ${${SUBPROJ_NAME}_ALL_SRCS})
+# ############################################################### #
+# Create target for build ####################################### #
+# ############################################################### #
+
+add_executable(
+    ${SUBPROJ_NAME} 
+    ${${SUBPROJ_NAME}_ALL_SRCS})
 
 # Enable C++17 on this project
 set_target_properties(
     ${SUBPROJ_NAME} PROPERTIES 
-    CXX_STANDARD 17
-    CXX_EXTENSIONS OFF
-    CXX_STANDARD_REQUIRED YES)
+    CXX_STANDARD          ${${SUBPROJ_NAME}_CXX_STANDARD}
+    CXX_EXTENSIONS        ${${SUBPROJ_NAME}_CXX_EXTENSIONS}
+    CXX_STANDARD_REQUIRED ${${SUBPROJ_NAME}_CXX_STANDARD_REQUIRED})
     
 # Set specific properties
 set_target_properties(
